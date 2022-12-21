@@ -1,33 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './TodoItem.module.css';
 
-class TodoItem extends React.Component {
-  render() {
-    const completedStyle = {
-      fontStyle: 'italic',
-      color: '#595959',
-      opacity: 0.4,
-      textDecoration: 'line-through',
-    };
-    const { completed, id, title } = this.props.todo;
-    return (
-      <li className={styles.item}>
+const TodoItem = (props) => {
+  const [editing, setEditing] = useState(false);
+
+  const handleEditing = () => {
+    setEditing(true);
+  };
+
+  const handleUpdatedDone = (event) => {
+    if (event.key === 'Enter') {
+      setEditing(false);
+    }
+  };
+
+  const completedStyle = {
+    fontStyle: 'italic',
+    color: '#595959',
+    opacity: 0.4,
+    textDecoration: 'line-through',
+  };
+  const properties = props;
+  const { completed, id, title } = properties.todo;
+
+  const viewMode = {};
+  const editMode = {};
+
+  if (editing) {
+    viewMode.display = 'none';
+  } else {
+    editMode.display = 'none';
+  }
+
+  return (
+
+    <li className={styles.item}>
+      <div onDoubleClick={handleEditing} style={viewMode}>
         <input
           type="checkbox"
           className={styles.checkbox}
           checked={completed}
-          onChange={() => this.props.handleChangeProps(id)}
+          onChange={() => properties.handleChangeProps(id)}
         />
-        <button onClick={() => this.props.deleteTodoProps(id)}>
-          Delete
-        </button>
-        <span style={completed ? completedStyle : null}>
-          {this.props.todo.title}
-        </span>
-
-      </li>
-    );
-  }
-}
+        <button type="button" aria-label="Delete" onClick={() => properties.deleteTodoProps(id)}>delete</button>
+        <span style={completed ? completedStyle : null}>{title}</span>
+      </div>
+      <input
+        type="text"
+        style={editMode}
+        className={styles.textInput}
+        value={title}
+        onChange={(e) => {
+          properties.setUpdate(e.target.value, id);
+        }}
+        onKeyDown={handleUpdatedDone}
+      />
+    </li>
+  );
+};
 
 export default TodoItem;
