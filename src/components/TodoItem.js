@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaTrash } from "react-icons/fa"
+import { FaTrash } from 'react-icons/fa';
 import styles from './TodoItem.module.css';
 
 const TodoItem = (props) => {
